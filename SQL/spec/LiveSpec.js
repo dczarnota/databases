@@ -47,11 +47,14 @@ describe("Persistent Node Chat Server", function() {
                * The exact query string and query args to use
                * here depend on the schema you design, so I'll leave
                * them up to you. */
-              dbConnection.query( queryString, queryArgs,
+              dbConnection.query( queryString,
                 function(err, results) {
                   // Should have one result:
+                  console.log("err: ",err);
+                  console.log("results: ",results);
+
                   expect(results.length).to.equal(1);
-                  expect(results[0].text).to.equal("In mercy's name, three days is all I need.");
+                  expect(results[0].message).to.equal("In mercy's name, three days is all I need.");
                   /* TODO: You will need to change these tests if the
                    * column names in your schema are different from
                    * mine! */

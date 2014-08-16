@@ -42,14 +42,11 @@ exports.saveUser = function(username, cb){
 };
 
 exports.saveMessage = function(message, userid, roomname, cb){
-    console.log("saveMessage ran");
-// var post = {message: message.toString(), id: userid.toString(), roomname:roomname.toString() };
+  console.log("saveMessage ran");
+  var post = {message: message, id: userid, roomname:roomname};
 
-// var query = dbConnection.query('INSERT INTO messages SET ?', post, function(err, result){
-//   if (!err) {console.log("inserted message!")}
-//   });
+  dbConnection.query('INSERT INTO messages SET ?', post, cb);
 
-  dbConnection.query('INSERT into messages (id, message, roomname) values (\'' + userid + '\',\'' + message + '\',\'' + roomname + '\')', cb);
+  // dbConnection.query('INSERT into messages (id, message, roomname) values (\'' + userid + '\',\'' + message + '\',\'' + roomname + '\')', cb);
 };
-
 
