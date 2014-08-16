@@ -12,7 +12,8 @@ exports.postMessage = function(req, res) {
   // declare this variable so we can retain access to it throughout the entire promise chain.
   var message;
 
-  var resultsCallback = function (results) {
+  var resultsCallback = function (err, results) {
+      console.log(err, results)
       var chat = {
         message: message.message,
         userid: results[0].id,
@@ -26,14 +27,14 @@ exports.postMessage = function(req, res) {
 
   parseData(req, function(_, msg) {
       message = msg;
-      findUser(msg.username, function (err, results) {
+      findUser(message.name, function (err, results) {
         // no results/0 results
         if (!results || !results.length) {
           // create the user, then post the message
-          saveUser(message.username, resultsCallback);
+          saveUser(message.name, resultsCallback);
         } else {
           // user exists, post the message to this user
-          resultsCallback(results);
+          resultsCallback(err, results);
         }
       });
   });
