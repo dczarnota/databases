@@ -14,11 +14,11 @@ describe("Persistent Node Chat Server", function() {
       user: "root",
       // and password.
       password: "",
-      database: "chat"
+      database: "chatSequelize"
     });
     dbConnection.connect();
 
-    var tablename = "messages"; // TODO: fill this out
+    var tablename = "Messages"; // TODO: fill this out
 
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */

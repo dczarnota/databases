@@ -18,6 +18,9 @@ CREATE TABLE messages (
   roomname VARCHAR(100) NOT NULL
 );
 
+users.hasMany(Task, Message, OtherTables...)
+Task.belongsTo(User)
+
 
 /* Create other tables and define schemas for them here! */
 
