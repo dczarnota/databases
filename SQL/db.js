@@ -23,7 +23,7 @@ dbConnection.connect();
 
 exports.findAllMessages = function(cb){
   console.log("findAllMessages ran")
-  dbConnection.query('SELECT * message from messages', cb);
+  dbConnection.query('SELECT * from messages', cb);
 };
 
 exports.findUser = function(username, cb){
@@ -36,7 +36,7 @@ exports.saveUser = function(username, cb){
     console.log("username: ", username)
   dbConnection.query('INSERT into users (name) values (\'' + username + '\')', function(err) {
       if (!err) {
-        dbConnection.query('SELECT name, id from users WHERE name = \'' + username + '\')', function(err,result) {cb(err, results)});
+        dbConnection.query('SELECT name, id from users WHERE name = \'' + username + '\')', function(err,results) {cb(err, results)});
       };
   });
 };

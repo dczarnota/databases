@@ -13,7 +13,7 @@ exports.postMessage = function(req, res) {
   var message;
 
   var resultsCallback = function (err, results) {
-      console.log(err, results)
+      console.log(err, results);
       var chat = {
         message: message.message,
         userid: results[0].id,
