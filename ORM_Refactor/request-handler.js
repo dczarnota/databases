@@ -13,30 +13,22 @@ exports.postMessage = function(req, res) {
   var message;
 
   var resultsCallback = function (err, results) {
-      console.log(err, results);
       var chat = {
         message: message.message,
-        userid: results[0].id,
+        userid: results.id,
         roomname: message.roomname
       };
 
       saveMessage(chat.message, chat.userid, chat.roomname, function () {
+        console.log("chat before sendResponse: ",chat);
         serverHelpers.sendResponse(res, message);
       });
   };
 
   parseData(req, function(_, msg) {
+    console.log("message: ",msg);
       message = msg;
-      findUser(message.name, function (err, results) {
-        // no results/0 results
-        if (!results || !results.length) {
-          // create the user, then post the message
-          saveUser(message.name, resultsCallback);
-        } else {
-          // user exists, post the message to this user
-          resultsCallback(err, results);
-        }
-      });
+      findUser(message.name, resultsCallback);
   });
 };
 

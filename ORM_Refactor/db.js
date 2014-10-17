@@ -1,5 +1,8 @@
 var mysql = require('mysql');
 var mysql = require('mysql');
+var Sequelize = require("sequelize");
+var sequelize = new Sequelize("chatSequelize", "root", "");
+
 /* If the node mysql module is not found on your system, you may
  * need to do an "sudo npm install -g mysql". */
 
@@ -9,7 +12,7 @@ var mysql = require('mysql');
 var dbConnection = mysql.createConnection({
   user: "root",
   password: "",
-  database: "chat"
+  database: "chatSequelize"
 });
 
 dbConnection.connect();
@@ -18,35 +21,42 @@ dbConnection.connect();
  * See https://github.com/felixge/node-mysql for more details about
  * using this module.*/
 
+var Users = sequelize.define('Users', {
+  name: { type: Sequelize.STRING, allowNull: false, unique: true }
+});
 
+var Messages = sequelize.define('Messages', {
+  message: { type: Sequelize.STRING, allowNull: false },
+  roomname: { type: Sequelize.STRING, allowNull: false }
+});
 
+Users.hasMany(Messages);
+Messages.belongsTo(Users);
+
+sequelize.sync().success(function(){
+  console.log("success");
+});
 
 exports.findAllMessages = function(cb){
   console.log("findAllMessages ran")
-  dbConnection.query('SELECT * from messages', cb);
+  Messages.findAll().success(function(messages){cb(null, messages)});
 };
 
 exports.findUser = function(username, cb){
   console.log("findUser ran");
-  dbConnection.query('SELECT name, id from users WHERE name = \'' + username + '\'', function(err, result) {cb(err, result)});
-};
-
-exports.saveUser = function(username, cb){
-    console.log("saveUser ran")
-    console.log("username: ", username)
-  dbConnection.query('INSERT into users (name) values (\'' + username + '\')', function(err) {
-      if (!err) {
-        dbConnection.query('SELECT name, id from users WHERE name = \'' + username + '\')', function(err,results) {cb(err, results)});
-      };
+  Users.findOrCreate({name: username}).success(function(user){
+    cb(null, user);
   });
 };
 
+
 exports.saveMessage = function(message, userid, roomname, cb){
   console.log("saveMessage ran");
-  var post = {message: message, id: userid, roomname:roomname};
+  var newMessage = Messages.build({message: message, UserId: userid, roomname:roomname});
 
-  dbConnection.query('INSERT INTO messages SET ?', post, cb);
-
-  // dbConnection.query('INSERT into messages (id, message, roomname) values (\'' + userid + '\',\'' + message + '\',\'' + roomname + '\')', cb);
+  newMessage.save()
+    .success(function(){
+      cb();
+    });
 };
 
